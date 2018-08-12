@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uatu", "Uatu\Uatu.csproj", "{65EB2D6D-A56D-4570-B23F-8272C0E5822B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UatuTest", "UatuTest\UatuTest.csproj", "{878DB540-99D2-4CF2-BB26-0298BCEC1E6D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{65EB2D6D-A56D-4570-B23F-8272C0E5822B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65EB2D6D-A56D-4570-B23F-8272C0E5822B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65EB2D6D-A56D-4570-B23F-8272C0E5822B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{878DB540-99D2-4CF2-BB26-0298BCEC1E6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{878DB540-99D2-4CF2-BB26-0298BCEC1E6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{878DB540-99D2-4CF2-BB26-0298BCEC1E6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{878DB540-99D2-4CF2-BB26-0298BCEC1E6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
