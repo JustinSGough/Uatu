@@ -1,8 +1,8 @@
-﻿using System;
+﻿using DrwgTronics.Uatu.Models;
+using DrwgTronics.Uatu.Views;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using DrwgTronics.Uatu.Models;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 
 namespace DrwgTronics.UatuTest
 {
@@ -10,7 +10,7 @@ namespace DrwgTronics.UatuTest
     public class TestLog
     {
         [TestMethod]
-        public void Basic()
+        public void LogBasic()
         {
             var log = new Log(toConsole: true, fileName: "out.txt");
 
@@ -21,7 +21,8 @@ namespace DrwgTronics.UatuTest
             log.LogEvent(create);
             log.LogEvent(update);
             log.LogEvent(delete);
-
+            log.LogString("Test String");
+            log.LogError("Test Error. Ouch!");
             log.Dispose();
 
             Assert.IsTrue(File.Exists("out.txt"));
@@ -38,7 +39,7 @@ namespace DrwgTronics.UatuTest
             }
             while (line != null);
 
-            Assert.IsTrue(lines.Count == 3);
+            Assert.IsTrue(lines.Count == 5);
         }
     }
 }

@@ -43,13 +43,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\LineCounter.cs" />
+    <Compile Include="Components\LineCountStatus.cs" />
     <Compile Include="Models\FileEvent.cs" />
-    <Compile Include="Models\ILog.cs" />
+    <Compile Include="Models\FileEventType.cs" />
+    <Compile Include="Views\ILog.cs" />
     <Compile Include="Components\LineCountProgress.cs" />
     <Compile Include="Components\ILineCounter.cs" />
     <Compile Include="Models\FileEntry.cs" />
     <Compile Include="Models\IFolderModel.cs" />
-    <Compile Include="Models\Log.cs" />
+    <Compile Include="Views\Log.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -6,13 +6,6 @@ using System.Threading.Tasks;
 
 namespace DrwgTronics.Uatu.Models
 {
-    public enum FileEventType
-    {
-        Create,
-        Update,
-        Delete
-    }
-
     public class FileEvent
     {
         public readonly FileEventType EventType;

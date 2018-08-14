@@ -1,20 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
+using DrwgTronics.Uatu.Models;
 
-namespace DrwgTronics.Uatu.Models 
+namespace DrwgTronics.Uatu.Views
 {
     /// <summary>
-    /// 
+    /// Emits output. Use this rather than scattered Console writes. 
+    /// Provides a place to add extra behavior such as logging to a file for tests
+    /// and buffering if output is ever a bottleneck.
     /// </summary>
     public class Log : ILog, IDisposable
     {
         const int MaxLengthChars = 10; // big enough for int without sign
         static readonly string ConsoleFileErrorFormat = "ERROR: Could not open {0}. Exception:" + Environment.NewLine + "{1}";
         static readonly string UnknownEventTypeErrorFormat = "ERROR: Unknown Event Type {0}";
+        static readonly string NullString = "Error: Null string passed to Log";
 
         bool _disposedValue = false;
         StreamWriter _writer;
@@ -72,7 +72,14 @@ namespace DrwgTronics.Uatu.Models
 
         public void LogString(string text)
         {
-            throw new NotImplementedException();
+            if (text == null)
+            {
+                LogError(NullString);
+                return;
+            }
+
+            if (_toConsole) { Console.WriteLine(text); }
+            if (_writer != null) { _writer.WriteLine("S|0|" + text); }
         }
 
         public void LogError(string error)
@@ -81,13 +88,14 @@ namespace DrwgTronics.Uatu.Models
             {
                 ConsoleColor fc = Console.ForegroundColor;
                 ConsoleColor bc = Console.BackgroundColor;
+                Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(error);
                 Console.ForegroundColor = fc;
                 Console.BackgroundColor = bc;
             }
             if (_writer != null)
             {
-
+                _writer.WriteLine("E|0|" + error);
             }
         }
 
