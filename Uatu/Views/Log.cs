@@ -17,7 +17,7 @@ namespace DrwgTronics.Uatu.Views
         static readonly string NullString = "Error: Null string passed to Log";
 
         bool _disposedValue = false;
-        StreamWriter _writer;
+        TextWriter _writer;
         bool _toConsole = true;
 
         public Log(bool toConsole = true, string fileName = null)
@@ -25,7 +25,7 @@ namespace DrwgTronics.Uatu.Views
             try
             {
                 _toConsole = toConsole;
-                if (fileName != null) { _writer = new StreamWriter(fileName); }
+                if (fileName != null) { _writer = TextWriter.Synchronized(new StreamWriter(fileName)); }
             }
             catch (Exception ex)
             {
@@ -37,6 +37,9 @@ namespace DrwgTronics.Uatu.Views
 
         public void LogEvent(FileEvent fileEvent)
         {
+            string name = fileEvent.FileEntry.Name;
+            int lineCount = fileEvent.FileEntry.LineCount;
+
             if (_toConsole)
             {
                 string message;
@@ -46,16 +49,16 @@ namespace DrwgTronics.Uatu.Views
                     case FileEventType.Create:
                         message = string.Format(
                             "Create: {0} {1}",
-                            fileEvent.LineCount.ToString().PadRight(MaxLengthChars+1), fileEvent.Name);
+                            lineCount.ToString().PadRight(MaxLengthChars+1), name);
                         break;
                     case FileEventType.Delete:
-                        message = string.Format("Delete:  {0} {1}", "".PadRight(MaxLengthChars), fileEvent.Name);
+                        message = string.Format("Delete:  {0} {1}", "".PadRight(MaxLengthChars), name);
                         break;
                     case FileEventType.Update:
-                        string sign = (fileEvent.LineCount < 0) ? "-" : "+";
+                        string sign = (lineCount < 0) ? "-" : "+";
                         message = string.Format(
                             "Update: {0}{1} {2}",
-                            sign, Math.Abs(fileEvent.LineCount).ToString().PadRight(MaxLengthChars), fileEvent.Name);
+                            sign, Math.Abs(lineCount).ToString().PadRight(MaxLengthChars), name);
                         break;
                     default:
                         message = string.Format(UnknownEventTypeErrorFormat, fileEvent);
@@ -66,7 +69,7 @@ namespace DrwgTronics.Uatu.Views
 
             if (_writer != null)
             {
-                _writer.WriteLine("{0}|{1}|{2}", fileEvent.EventType, fileEvent.LineCount, fileEvent.Name);
+                _writer.WriteLine("{0}|{1}|{2}", fileEvent.EventType, lineCount, name);
             }
         }
 

@@ -11,15 +11,29 @@ namespace DrwgTronics.Uatu.Models
         public readonly static DateTime NotModified = default(DateTime);
         public const int NotCounted = -1;
 
-        public readonly string Name;
-        public DateTime ModifiedDate;
-        public int LineCount; // int OK. Max of 1G lines in 2GB file with CR LF endings.
+        public string Name { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public int LineCount { get; set; } // int OK. Max of 1G lines in 2GB file with CR LF endings.
+        public int Generation { get; set; }
 
-        public FileEntry(string name, DateTime modifiedDate = default(DateTime), int lineCount = NotCounted)
+        public FileEntry(
+            string name, 
+            DateTime modifiedDate = default(DateTime), 
+            int lineCount = NotCounted,
+            int generation = 0)
         {
             Name = name;
             ModifiedDate = modifiedDate;
             LineCount = lineCount;
+        }
+
+        public FileEntry CopyTo(FileEntry to)
+        {
+            to.Name = Name;
+            to.ModifiedDate = ModifiedDate;
+            to.LineCount = LineCount;
+            to.Generation = Generation;
+            return to;
         }
     }
 }

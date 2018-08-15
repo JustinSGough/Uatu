@@ -43,10 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\BulkLoader.cs" />
+    <Compile Include="Components\IBulkLoader.cs" />
     <Compile Include="Components\LineCounter.cs" />
     <Compile Include="Components\LineCountStatus.cs" />
+    <Compile Include="Components\Watcher.cs" />
     <Compile Include="Models\FileEvent.cs" />
     <Compile Include="Models\FileEventType.cs" />
+    <Compile Include="Models\FolderModel.cs" />
     <Compile Include="Views\ILog.cs" />
     <Compile Include="Components\LineCountProgress.cs" />
     <Compile Include="Components\ILineCounter.cs" />

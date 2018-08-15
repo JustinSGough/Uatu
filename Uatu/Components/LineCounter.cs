@@ -11,25 +11,7 @@ namespace DrwgTronics.Uatu.Components
 {
     public class LineCounter : ILineCounter
     {
-        public void Count(FileEvent fileEvent, IProgress<LineCountProgress> progress)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task CountAsync(FileEvent fileEvent, IProgress<LineCountProgress> progress)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CountBatch(List<FileEvent> fileEvents, IProgress<LineCountProgress> progress)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task CountBatchAsync(List<FileEvent> fileEvents, IProgress<LineCountProgress> progress)
-        {
-            throw new NotImplementedException();
-        }
+        public string FolderPath { get; set; }
 
         public LineCountProgress Count(FileEvent fileEvent)
         {
@@ -46,8 +28,9 @@ namespace DrwgTronics.Uatu.Components
                 try
                 {
                     int count = -1;
+                    string path = Path.Combine(FolderPath ?? "", fileEvent.FileEntry.Name);
 
-                    using (var f = new StreamReader(fileEvent.Name, detectEncodingFromByteOrderMarks: true))
+                    using (var f = new StreamReader(path, detectEncodingFromByteOrderMarks: true))
                     {
                         string line;
                         do
@@ -98,5 +81,40 @@ namespace DrwgTronics.Uatu.Components
 
             return report;
         }
+
+        public Task<LineCountProgress> CountAsync(FileEvent fileEvent)
+        {
+            return Task.Run(() => Count(fileEvent));
+        }
+
+        public List<LineCountProgress> CountBatch(List<FileEvent> fileEvents)
+        {
+            var results = new List<LineCountProgress>(fileEvents.Count);
+            fileEvents.ForEach((fileEvent) => CountAndSave(fileEvent, results));
+            return results;
+        }
+
+        public Task CountBatchAsync(List<FileEvent> fileEvents, IProgress<LineCountProgress> progress)
+        {
+            return Task.Run(() => CountAndReportBatch(fileEvents, progress));
+        }
+
+        void CountAndReportBatch(List<FileEvent> fileEvents, IProgress<LineCountProgress> progress)
+        {
+            Parallel.ForEach(fileEvents, (fileEvent) => CountAndReport(fileEvent, progress));
+        }
+
+        void CountAndReport(FileEvent fileEvent, IProgress<LineCountProgress> progress)
+        {
+            LineCountProgress report = Count(fileEvent);
+            if (progress != null) progress.Report(report);
+        }
+
+        void CountAndSave(FileEvent fileEvent, List<LineCountProgress> results)
+        {
+            LineCountProgress report = Count(fileEvent);
+            results.Add(report);
+        }
+
     }
 }

@@ -23,5 +23,14 @@ namespace DrwgTronics.Uatu.Components
             Status = status;
             Note = note;
         }
+
+        public LineCountProgress CopyTo(LineCountProgress copy)
+        {
+            copy.FileEvent = FileEvent;
+            copy.Count     = Count;
+            copy.Status    = Status;
+            copy.Note      = Note;
+            return copy;
+        }
     }
 }

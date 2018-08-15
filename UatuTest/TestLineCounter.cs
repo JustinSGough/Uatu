@@ -15,7 +15,16 @@ namespace DrwgTronics.UatuTest
         public void CountMissingFile()
         {
             var fc = new LineCounter();
-            var model = new FileEvent(FileEventType.Create, "r:\\no way that this file is really there.txt", 0);
+            var model = new FileEvent(FileEventType.Create, new FileEntry("no way that this file is really there.txt"));
+            LineCountProgress result = fc.Count(model);
+            Assert.AreEqual(result.Status, LineCountStatus.FileNotFound);
+        }
+
+        [TestMethod]
+        public void CountBadPath()
+        {
+            var fc = new LineCounter();
+            var model = new FileEvent(FileEventType.Create, new FileEntry("r:\\no way that this file is really there.txt"));
             LineCountProgress result = fc.Count(model);
             Assert.AreEqual(result.Status, LineCountStatus.FileNotFound);
         }
@@ -34,7 +43,7 @@ namespace DrwgTronics.UatuTest
             var x = Task.Run(() => LockFile(Test_Locked, seconds:30));
             Thread.Sleep(1000); // give it time to open and lock the file
             var fc = new LineCounter();
-            var model = new FileEvent(FileEventType.Create, Test_Locked, 0);
+            var model = new FileEvent(FileEventType.Create, new FileEntry(Test_Locked));
             LineCountProgress result = fc.Count(model);
             
             Assert.AreEqual(result.Status, LineCountStatus.TimedOut);
@@ -56,7 +65,7 @@ namespace DrwgTronics.UatuTest
             var x = Task.Run(() => LockFile(Test_Locked, seconds:15));
             Thread.Sleep(1000); // give it time to open and lock the file
             var fc = new LineCounter();
-            var model = new FileEvent(FileEventType.Create, Test_Locked, 0);
+            var model = new FileEvent(FileEventType.Create, new FileEntry(Test_Locked));
             LineCountProgress result = fc.Count(model);
 
             Assert.AreEqual(result.Status, LineCountStatus.Success);
@@ -90,7 +99,7 @@ namespace DrwgTronics.UatuTest
                 ff.FillFile(Test_0, 0, -2);
             }
             var fc = new LineCounter();
-            var model = new FileEvent(FileEventType.Create, Test_0, 0);
+            var model = new FileEvent(FileEventType.Create, new FileEntry(Test_0));
             LineCountProgress result = fc.Count(model);
 
             Assert.AreEqual(result.Status, LineCountStatus.Success);
@@ -108,11 +117,54 @@ namespace DrwgTronics.UatuTest
                 ff.FillFile(Test_10000, 10000, 0);
             }
             var fc = new LineCounter();
-            var model = new FileEvent(FileEventType.Create, Test_10000, 0);
+            var model = new FileEvent(FileEventType.Create, new FileEntry(Test_10000));
             LineCountProgress result = fc.Count(model);
 
             Assert.AreEqual(result.Status, LineCountStatus.Success);
             Assert.AreEqual(10000, result.Count);
+        }
+
+        [TestMethod]
+        public void List100000Files()
+        {
+            const string tag = "Test100000";
+            FillMany100000();
+
+            string[] file = Directory.GetFiles(Directory.GetCurrentDirectory(), tag + "_*.txt");
+
+        }
+
+
+        [TestMethod]
+        public void FillMany100()
+        {
+            const string tag = "Test100";
+
+            if (!File.Exists(tag + "_1"))
+            {
+                var ff = new FileFiller();
+                ff.FillManyFiles(tag, count: 100, numberOfLines: 5, lineLength: FileFiller.RandomLength);
+            }
+
+            int fileCount = Directory.GetFiles(Directory.GetCurrentDirectory(), tag + "_*.txt").Length;
+
+            Assert.AreEqual(fileCount, 100);
+        }
+
+        [TestMethod]
+        public void FillMany100000()
+        {
+            const string tag = "Test100000";
+
+            if (!File.Exists(tag + "_1.txt"))
+            {
+                var ff = new FileFiller();
+                ff.FillManyFiles(tag, count: 100000, numberOfLines: 2, lineLength: FileFiller.RandomLength);
+            }
+
+            int fileCount = Directory.GetFiles(Directory.GetCurrentDirectory(), tag + "_*.txt").Length;
+
+            Assert.AreEqual(fileCount, 100000);
         }
     }
 }

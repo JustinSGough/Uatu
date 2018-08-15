@@ -10,6 +10,7 @@ namespace DrwgTronics.Uatu.Models
     {
         Create,
         Update,
-        Delete
+        Delete,
+        Initialize
     }
 }

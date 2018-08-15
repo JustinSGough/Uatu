@@ -6,15 +6,13 @@ using System.Threading.Tasks;
 
 namespace DrwgTronics.Uatu.Models
 {
-    public interface IFolderModel
+    public interface IFolderModel 
     {
-        void AddFile(string name, DateTime modifiedDate, int lineCount);
         void AddFile(FileEntry fileEntry);
-        void UpdateFile(string name, DateTime modifiedDate, int lineCount);
         void UpdateFile(FileEntry fileEntry);
-        void DeleteFile(string name);
         void DeleteFile(FileEntry fileEntry);
-
-        // Events for add, delete, update?
+        void BulkAddFiles(IEnumerable<FileEntry> fileEntries);
+        List<FileEvent> AsFileEvents(FileEventType fileEventType);
+        void Clear();
     }
 }

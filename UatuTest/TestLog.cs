@@ -14,9 +14,9 @@ namespace DrwgTronics.UatuTest
         {
             var log = new Log(toConsole: true, fileName: "out.txt");
 
-            var create = new FileEvent(FileEventType.Create, "File1", 1000);
-            var delete = new FileEvent(FileEventType.Delete, "File2");
-            var update = new FileEvent(FileEventType.Update, "File1", -100);
+            var create = new FileEvent(FileEventType.Create, new FileEntry("File1", lineCount: 1000));
+            var delete = new FileEvent(FileEventType.Delete, new FileEntry("File2"));
+            var update = new FileEvent(FileEventType.Update, new FileEntry("File1", lineCount: -100));
 
             log.LogEvent(create);
             log.LogEvent(update);

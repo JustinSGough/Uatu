@@ -10,10 +10,11 @@ namespace DrwgTronics.Uatu.Components
 {
     public interface ILineCounter
     {
-        void CountBatch(List<FileEvent> fileEvents, IProgress<LineCountProgress> progress);
-        Task CountBatchAsync(List<FileEvent> fileEvents, IProgress<LineCountProgress> progress);
+        string FolderPath { get; set; }
+        LineCountProgress Count(FileEvent fileEvent);
+        Task<LineCountProgress> CountAsync(FileEvent fileEvent);
 
-        void Count(FileEvent fileEvent, IProgress<LineCountProgress> progress);
-        Task CountAsync(FileEvent fileEvent, IProgress<LineCountProgress> progress);
+        List<LineCountProgress> CountBatch(List<FileEvent> fileEvents);
+        Task CountBatchAsync(List<FileEvent> fileEvents, IProgress<LineCountProgress> progress);
     }
 }

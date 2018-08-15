@@ -6,17 +6,15 @@ using System.Threading.Tasks;
 
 namespace DrwgTronics.Uatu.Models
 {
-    public class FileEvent
+    public class FileEvent 
     {
-        public readonly FileEventType EventType;
-        public readonly string Name;
-        public readonly int LineCount;
+        public FileEventType EventType { get; set; }
+        public FileEntry FileEntry { get; set; }
 
-        public FileEvent(FileEventType eventType, string name, int lineCount = 0)
+        public FileEvent(FileEventType eventType, FileEntry entry)
         {
             EventType = eventType;
-            Name = name;
-            LineCount = lineCount;
+            FileEntry = entry;
         }
     }
 }
