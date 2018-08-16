@@ -1,0 +1,66 @@
+﻿Home Coding Exercise:
+R1.	Create a command-line program to watch for text files to be created or modified in a directory and then output information about them.
+The program takes 2 arguments, 
+R2.	the directory to watch and a 
+R3.	file pattern, 
+example: program.exe "c:\file folder" *.txt
+The path may be
+R4.	 an absolute path, relative to the current directory, or 
+R5.	UNC. 
+The target directory will have no subdirectories. 
+The file system will be either 
+R6.	NTFS or 
+R7.	exFAT.
+Behavior
+R8.	Use the modified date of the file as a trigger that the file has changed.
+R9.	Check for changes every 10 seconds.
+R10.	When a file is created output a line to the console with its name and how many lines are in it.
+R11.	When a file is modified output a line with its name and the change in number of lines (use a + or - to indicate more or less).
+R12.	When a file is deleted output a line with its name.
+R13.	Renamed files can be treated as a delete and add.
+R14.	Treat file names as case insensitive, e.g. files renamed only by changing case should be treated as no change.
+Files will be 
+R15.	ASCII or 
+R16.	UTF-8 and will 
+R17.	use Windows line separators (CR LF).
+R18.	Multiple files may be changed at the same time, 
+R19.	can be up to 2 GB in size, and 
+R20.	may be locked for several seconds at a time.
+Use multiple threads so that the 
+R21.	program doesn't block on a single large or locked file.
+File count
+R22.	There may be as many as 100,000 files at any given time.
+OS
+R23.	Program will be run on Windows 10.
+Use your best judgement for any items not covered by these requirements.
+When you are done, please 
+R24.	zip up your project and upload your zip file to: https://link.pdq.com/application (no account required).  NOTE: Please 
+R25.	include your name as part of your zip filename.
+
+Notes
+a.	Choice between iterating directory listing the FileSystemWatcher class, or some hybrid. 
+First thought is to use the FileSystemWatcher class. I will look at that and see if any requirements keep me from using it.
+FileSystemWatcher has a buffer that can overflow, especially for UNC paths. Set to maximum of 64k and handle events quickly.
+FilesystemWatcher Events are called on another thread. Synchronize as needed. Not a problem as program already needs multiple threads.
+b.	I can't tell if  R8 and R9 are 1) hints from an expert, 2) design constraints or 3) suggestions that the requirement author threw in. None of the other requirements really depend on this, so I am going to look at FileSystemWatcher. I can hide it behind an interface if it needs to be swapped out.
+c.	Looks like R10 is going to force me to have a baseline count for files. The fancy way to handle this would be to use an unmanaged file system filter so I could intercept file open requests for the folder and count the lines then. That way, I would not have to count them all up-front. In real life, I’d ask the customer if they can wait for all files to be counted, and whether delta counts are critical for files that were already in the folder when the application started.
+
+Console Application
+   Main()
+   Top-level exception catch
+   Setup, teardown.
+Initializer 
+   Keep separate to help with unit tests. Can feed real command-line arguments or test case args.
+Watcher
+    Inject this there used so we can have a mock for unit tests. Need that to stress test.
+Catalog
+    Keeps file sizes and any other data not provided by Watcher.
+Logger
+    Use this rather than direct writes to the Console. That way, we can capture and compare output for tests.
+Tweaker
+    Helps make lots of file changes for tests.
+LineCounter
+    Counts lines using multiple threads as needed.
+    Might use knowledge of processor count if easy enough.
+  
+

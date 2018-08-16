@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using DrwgTronics.Uatu.Models;
 using DrwgTronics.Uatu.Views;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DrwgTronics.Uatu.Components
 {
@@ -34,8 +36,12 @@ namespace DrwgTronics.Uatu.Components
             _loader.Load(_directory, _filter, _model);
             List<FileEvent> initialpopulation = _model.AsFileEvents(FileEventType.Initialize);
             var x = _counter.CountBatchAsync(initialpopulation, this);
-            Console.WriteLine("Waiting");
             x.Wait();
+        }
+
+        public Task StartAsync()
+        {
+            return Task.Run(() => Start());
         }
 
         public void Stop()

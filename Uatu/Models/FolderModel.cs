@@ -15,6 +15,12 @@ namespace DrwgTronics.Uatu.Models
         protected Dictionary<string, FileEntry> Files = new Dictionary<string, FileEntry>(1000);
         object _lockObject = new Object();  // use c# lock, upgrade to Monitor if timeout is needed.
 
+        public FileEntry this[string key]
+        {
+            get { return Files[key]; }
+            set { Files[key] = value; }
+        }
+
         /// <summary>
         /// Used for initial load only. Bypasses checks.
         /// </summary>
@@ -78,6 +84,11 @@ namespace DrwgTronics.Uatu.Models
                 list.Add(fileEvent);
             }
             return list;
+        }
+
+        public int Count()
+        {
+            return Files.Count;
         }
     }
 }

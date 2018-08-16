@@ -17,11 +17,12 @@ namespace DrwgTronics.Uatu.Components
             int count = 0;
 
             if (!Directory.Exists(directory)) throw new DirectoryNotFoundException(directory);
+
             var info = new DirectoryInfo(directory);
 
             var buffer = new List<FileEntry>(BufferSize);
 
-            foreach (FileInfo fi in info.EnumerateFiles(filter))
+            foreach (FileInfo fi in info.EnumerateFiles(filter)) // throws ArgumentException if filter is bad
             {
                 var entry = new FileEntry(fi.Name, fi.LastWriteTimeUtc);
                 buffer.Add(entry);
