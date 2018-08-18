@@ -8,9 +8,11 @@ namespace DrwgTronics.Uatu.Models
 {
     public enum FileEventType
     {
+        None,
         Create,
         Update,
         Delete,
+        Rename,
         Initialize
     }
 }

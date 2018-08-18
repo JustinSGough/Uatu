@@ -14,7 +14,10 @@ namespace DrwgTronics.Uatu.Models
         void DeleteFile(FileEntry fileEntry);
         void BulkAddFiles(IEnumerable<FileEntry> fileEntries);
         List<FileEvent> AsFileEvents(FileEventType fileEventType);
+        bool EnforceLocks { get; set; }
+        bool TryGetValue(string key, out FileEntry fileEntry);
         void Clear();
         int Count();
+        IEnumerable<FileEntry> FromGeneration(int generation);
     }
 }

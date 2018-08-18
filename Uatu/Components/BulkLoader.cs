@@ -30,8 +30,16 @@ namespace DrwgTronics.Uatu.Components
 
                 if (count % BufferSize == 0)
                 {
-                    model.BulkAddFiles(buffer);
-                    buffer.Clear();
+                    try
+                    {
+                        model.EnforceLocks = false;
+                        model.BulkAddFiles(buffer);
+                        buffer.Clear();
+                    }
+                    finally
+                    {
+                        model.EnforceLocks = true;
+                    }
                 }
             }
             if (buffer.Count > 0) model.BulkAddFiles(buffer);

@@ -16,7 +16,7 @@ namespace DrwgTronics.Uatu.Components
         public LineCountProgress Count(FileEvent fileEvent)
         {
             const double TimeoutSeconds = 20.0;
-            const int RetryInterval = 5000; // 5 seconds
+            const int RetryInterval = 1000; // 1 seconds
             var report = new LineCountProgress(fileEvent);
 
             DateTime startTime = DateTime.Now;
@@ -27,7 +27,7 @@ namespace DrwgTronics.Uatu.Components
             {
                 try
                 {
-                    int count = -1;
+                    int count = FileEntry.NotCounted;
                     string path = Path.Combine(FolderPath ?? "", fileEvent.FileEntry.Name);
 
                     using (var f = new StreamReader(path, detectEncodingFromByteOrderMarks: true))

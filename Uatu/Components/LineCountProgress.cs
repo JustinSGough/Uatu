@@ -14,7 +14,7 @@ namespace DrwgTronics.Uatu.Components
 
         public LineCountProgress(
             FileEvent fileEvent, 
-            int count = -1, 
+            int count = FileEntry.NotCounted, 
             LineCountStatus status = LineCountStatus.Success, 
             string note = null)
         {

@@ -44,9 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\BulkLoader.cs" />
+    <Compile Include="Components\FolderMonitorPolled.cs" />
     <Compile Include="Components\IBulkLoader.cs" />
+    <Compile Include="Components\IFolderMonitor.cs" />
     <Compile Include="Components\LineCounter.cs" />
     <Compile Include="Components\LineCountStatus.cs" />
+    <Compile Include="Components\FolderMonitor.cs" />
     <Compile Include="Components\Watcher.cs" />
     <Compile Include="Models\FileEvent.cs" />
     <Compile Include="Models\FileEventType.cs" />

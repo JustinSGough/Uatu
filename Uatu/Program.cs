@@ -39,11 +39,12 @@ namespace DrwgTronics.Uatu
                 var counter = new LineCounter();
                 var loader = new BulkLoader();
                 var controller = new Watcher(view, model, counter, loader, path, filter);
-
+                controller.FolderChanged += Controller_FolderChanged;
                 Task t = controller.StartAsync();
 
                 Console.Write("Waitng...");
                 t.Wait();
+
                 Console.WriteLine("DONE");
             }
             finally
@@ -51,6 +52,23 @@ namespace DrwgTronics.Uatu
                 WaitForExit();
             }
         }
+
+        private static void Controller_FolderChanged(object sender, FileEvent e)
+        {
+            int delta = 0;
+
+            if (e.EventType == FileEventType.Create)
+            {
+                delta = e.FileEntry.LineCount;
+            }
+            else if (e.EventType == FileEventType.Update)
+            {
+                delta = e.FileEntry.LineCount - e.OldCount;
+            }
+
+            Console.WriteLine("{0}, {1}, {2}", e.EventType, delta, e.FileEntry.Name);
+        }
+
 
         static void WaitForExit()
         {
