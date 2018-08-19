@@ -12,7 +12,7 @@ namespace DrwgTronics.Uatu.Components
     public class Watcher : IProgress<LineCountProgress>, IFolderMonitor
     {
         const double PollTimeMilliseconds = 10000.0;
-
+        public const string Monitoring = "Monitoring for changes.";
         ILog _view;
         IFolderModel _model;
         ILineCounter _counter;
@@ -48,7 +48,7 @@ namespace DrwgTronics.Uatu.Components
             var batchCountTask = _counter.CountBatchAsync(initialpopulation, this);
             batchCountTask.Wait();
 
-            OnStatus(this, "Monitoring for changes.");
+            OnStatus(this, Monitoring);
             List<FileEvent> addUpdateBatch;
             List<FileEvent> deleteBatch;
             DateTime lastScanStart;

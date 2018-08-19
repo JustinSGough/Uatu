@@ -3,7 +3,9 @@ using DrwgTronics.Uatu.Models;
 using DrwgTronics.Uatu.Views;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace DrwgTronics.UatuTest
 {
@@ -109,5 +111,69 @@ namespace DrwgTronics.UatuTest
 
             Console.WriteLine("DONE");
         }
+
+        int _RandomCounted = 0;
+        string _lastStatus = null;
+
+        [TestMethod]
+        public void RandomChanges()
+        {
+            const string Tag = "TestWatcherRandomChanges_";
+            string folderName = Directory.GetCurrentDirectory();
+            string pattern = Tag + "*";
+
+            foreach (string file in Directory.EnumerateFiles(folderName, pattern)) File.Delete(file);
+
+            var ff = new FileFiller();
+
+            var initialPopulation = new List<FileEntry>();
+            for (int i = 1; i <= 99; i++)
+            {
+                string fName = Tag + i + ".txt";
+                ff.FillFile(fName, numberOfLines: i, lineLength: FileFiller.RandomLength);
+                initialPopulation.Add(new FileEntry(fName,DateTime.UtcNow, i,0));
+            }
+            for (int i = 100; i <= 102400; i *= 2)
+            {
+                string fName = Tag + i + ".txt";
+                ff.FillFile(fName, numberOfLines: i, lineLength: FileFiller.RandomLength);
+                initialPopulation.Add(new FileEntry(fName, DateTime.UtcNow, i, 0));
+            }
+
+            _RandomCounted = 0;
+
+            var model = new FolderModel();
+            var view = new Log(toConsole: false, fileName: "out.txt");
+            var counter = new LineCounter();
+            var loader = new BulkLoader();
+
+            var controller = new Watcher(view, model, counter, loader, folderName, Tag + "*");
+            controller.FolderChanged += Controller_FolderChanged_Random;
+            controller.Status += Controller_Status;
+            System.Threading.Tasks.Task w = controller.StartAsync();
+
+            int loops = 0;
+            while (_lastStatus != Watcher.Monitoring)
+            {
+                loops++;
+                Thread.Sleep(1000);
+                if (loops > 100) { Assert.Fail("Some Ting Wong"); break; }
+            }
+            
+
+        }
+
+        private void Controller_Status(object sender, string e)
+        {
+            _lastStatus = e;
+        }
+
+        private void Controller_FolderChanged_Random(object sender, FileEvent e)
+        {
+            _RandomCounted++;
+        }
+
+        
+
     }
 }
