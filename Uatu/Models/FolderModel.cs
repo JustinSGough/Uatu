@@ -272,14 +272,14 @@ namespace DrwgTronics.Uatu.Models
             }
         }
 
-        public IEnumerable<FileEntry> FromGeneration(int generation)
+        public IEnumerable<FileEntry> FromGenerationPriorTo(int generation)
         {
             if (_enforceLocks)
             {
                 try
                 {
                     Monitor.Enter(_lockObject);
-                    return Files.Values.Where(f => f.Generation == generation);
+                    return Files.Values.Where(f => f.Generation < generation);
                 }
                 finally
                 {
@@ -288,7 +288,7 @@ namespace DrwgTronics.Uatu.Models
             }
             else
             {
-                return Files.Values.Where(f => f.Generation == generation);
+                return Files.Values.Where(f => f.Generation < generation);
             }        
         } 
     }

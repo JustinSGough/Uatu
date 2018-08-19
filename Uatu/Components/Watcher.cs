@@ -73,10 +73,10 @@ namespace DrwgTronics.Uatu.Components
                 {
                     OnFolderChanged(this, e);
                 }
-                //addUpdateCounterTask.Wait();
 
                 double timeLeftInCycle = PollTimeMilliseconds - (DateTime.Now - lastScanStart).TotalMilliseconds;
-                
+                addUpdateCounterTask.Wait((int)timeLeftInCycle); // be courteous but don't delay next cycle.
+                timeLeftInCycle = PollTimeMilliseconds - (DateTime.Now - lastScanStart).TotalMilliseconds;
                 if (timeLeftInCycle > 1.0) Thread.Sleep((int)(timeLeftInCycle)); 
             }
         }
@@ -109,7 +109,7 @@ namespace DrwgTronics.Uatu.Components
                 }
             }
 
-            var filesMissingInThisGeneration = model.FromGeneration(generation - 1);
+            var filesMissingInThisGeneration = model.FromGenerationPriorTo(generation);
             deleteBatch = new List<FileEvent>(100);
 
             foreach (FileEntry fileEntry in filesMissingInThisGeneration.ToArray())

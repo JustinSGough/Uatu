@@ -88,8 +88,8 @@ namespace DrwgTronics.UatuTest
 
             var controller = new Watcher(view, model, counter, loader, dir, Tag + "*");
 
-            controller.Start();
-
+            System.Threading.Tasks.Task w = controller.StartAsync();
+            w.Wait(10000);
             var q = model[Tag + "1" + ".txt"];
 
             Assert.AreEqual(model.Count(), 13);

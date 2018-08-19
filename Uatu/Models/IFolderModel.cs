@@ -18,6 +18,6 @@ namespace DrwgTronics.Uatu.Models
         bool TryGetValue(string key, out FileEntry fileEntry);
         void Clear();
         int Count();
-        IEnumerable<FileEntry> FromGeneration(int generation);
+        IEnumerable<FileEntry> FromGenerationPriorTo(int generation);
     }
 }
