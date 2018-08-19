@@ -25,6 +25,7 @@ namespace DrwgTronics.Uatu.Models
             Name = name;
             ModifiedDate = modifiedDate;
             LineCount = lineCount;
+            Generation = generation;
         }
 
         public FileEntry CopyTo(FileEntry to)

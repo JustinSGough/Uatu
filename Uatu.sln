@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Uatu", "Uatu\Uatu.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UatuTest", "UatuTest\UatuTest.csproj", "{878DB540-99D2-4CF2-BB26-0298BCEC1E6D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LockFile", "LockFile\LockFile.csproj", "{62C88F4A-DEFE-4A38-B186-067A8D7F8B94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Add10Lines", "Add10Lines\Add10Lines.csproj", "{D21B5604-2BCF-4FA5-A014-686E71F75E12}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{878DB540-99D2-4CF2-BB26-0298BCEC1E6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{878DB540-99D2-4CF2-BB26-0298BCEC1E6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{878DB540-99D2-4CF2-BB26-0298BCEC1E6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62C88F4A-DEFE-4A38-B186-067A8D7F8B94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62C88F4A-DEFE-4A38-B186-067A8D7F8B94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62C88F4A-DEFE-4A38-B186-067A8D7F8B94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62C88F4A-DEFE-4A38-B186-067A8D7F8B94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D21B5604-2BCF-4FA5-A014-686E71F75E12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D21B5604-2BCF-4FA5-A014-686E71F75E12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D21B5604-2BCF-4FA5-A014-686E71F75E12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D21B5604-2BCF-4FA5-A014-686E71F75E12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

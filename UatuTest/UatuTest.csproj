@@ -52,6 +52,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="TestAcceptance.cs" />
     <Compile Include="FileFiller.cs" />
     <Compile Include="TestBulkLoader.cs" />
     <Compile Include="TestLog.cs" />

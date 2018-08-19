@@ -11,6 +11,8 @@ namespace DrwgTronics.Uatu.Components
 {
     public class Watcher : IProgress<LineCountProgress>, IFolderMonitor
     {
+        const double PollTimeMilliseconds = 10000.0;
+
         ILog _view;
         IFolderModel _model;
         ILineCounter _counter;
@@ -19,6 +21,7 @@ namespace DrwgTronics.Uatu.Components
         string _filter;
 
         public event EventHandler<FileEvent> FolderChanged;
+        public event EventHandler<string> Status;
 
         public Watcher(ILog view, IFolderModel model, ILineCounter counter, IBulkLoader loader, string folder, string filter)
         {
@@ -35,25 +38,33 @@ namespace DrwgTronics.Uatu.Components
         {
             if (!Directory.Exists(_directory)) throw new DirectoryNotFoundException(_directory);
             var info = new DirectoryInfo(_directory);
+
             _model.Clear();
+            OnStatus(this, "Getting initial directory list.");
             _loader.Load(_directory, _filter, _model);
+
+            OnStatus(this, "Getting baseline counts for list.");
             List<FileEvent> initialpopulation = _model.AsFileEvents(FileEventType.Initialize);
             var batchCountTask = _counter.CountBatchAsync(initialpopulation, this);
             batchCountTask.Wait();
 
+            OnStatus(this, "Monitoring for changes.");
             List<FileEvent> addUpdateBatch;
             List<FileEvent> deleteBatch;
+            DateTime lastScanStart;
 
-            for (int generation = 1; generation < 1000; generation++)
+            for (int generation = 1; true ; generation++)
             {
+                lastScanStart = DateTime.Now;
+
                 try
                 {
-                    _model.EnforceLocks = false;
+                    //_model.EnforceLocks = false;
                     Scan(_model, info, generation, out addUpdateBatch, out deleteBatch);
                 }
                 finally
                 {
-                    _model.EnforceLocks = true;
+                    //_model.EnforceLocks = true;
                 }
 
                 Task addUpdateCounterTask = _counter.CountBatchAsync(addUpdateBatch, this);
@@ -62,8 +73,11 @@ namespace DrwgTronics.Uatu.Components
                 {
                     OnFolderChanged(this, e);
                 }
-                addUpdateCounterTask.Wait();
-                Thread.Sleep(5000); 
+                //addUpdateCounterTask.Wait();
+
+                double timeLeftInCycle = PollTimeMilliseconds - (DateTime.Now - lastScanStart).TotalMilliseconds;
+                
+                if (timeLeftInCycle > 1.0) Thread.Sleep((int)(timeLeftInCycle)); 
             }
         }
 
@@ -73,7 +87,6 @@ namespace DrwgTronics.Uatu.Components
 
             foreach (FileInfo fi in info.EnumerateFiles(_filter)) // throws ArgumentException if filter is bad
             {
-                var entry = new FileEntry(fi.Name, fi.LastWriteTimeUtc);
                 FileEntry foundEntry;
 
                 if (model.TryGetValue(fi.Name, out foundEntry))
@@ -89,7 +102,7 @@ namespace DrwgTronics.Uatu.Components
                 }
                 else
                 {
-                    var newEntry = new FileEntry(fi.Name, fi.CreationTimeUtc, FileEntry.NotCounted, generation);
+                    var newEntry = new FileEntry(fi.Name, fi.LastWriteTimeUtc, FileEntry.NotCounted, generation);
                     model.AddFile(newEntry);
                     var fileEvent = new FileEvent(FileEventType.Create, newEntry);
                     addUpdateBatch.Add(fileEvent);
@@ -125,19 +138,43 @@ namespace DrwgTronics.Uatu.Components
             {
                 FileEventType t = fileEvent.EventType;
 
-                if (t == FileEventType.Update) { fileEvent.OldCount = fileEvent.FileEntry.LineCount; }
+                if (t == FileEventType.Initialize)
+                {
+                    fileEvent.FileEntry.LineCount = value.Count;
+                }
 
-                if (t == FileEventType.Create || t == FileEventType.Update || t == FileEventType.Initialize)
+                if (t == FileEventType.Update)
+                {
+                    fileEvent.OldCount = fileEvent.FileEntry.LineCount;
+                }
+
+                if (t == FileEventType.Create || t == FileEventType.Update)
                 {
                     fileEvent.FileEntry.LineCount = value.Count;
                     OnFolderChanged(this, fileEvent);
                 }
+
+                // deletes don't come back through progress and are logged all at once elsewhere
+            }
+            else if (value.Status == LineCountStatus.TimedOut)
+            {
+                // When and if the file is released, it will be logged as an update.
             }
         }
 
         protected virtual void OnFolderChanged(object source, FileEvent e)
         {
             EventHandler<FileEvent> handler = FolderChanged;
+
+            if (handler != null)
+            {
+                handler(this, e);
+            }
+        }
+
+        protected virtual void OnStatus(object source, string e)
+        {
+            EventHandler<string> handler = Status;
 
             if (handler != null)
             {

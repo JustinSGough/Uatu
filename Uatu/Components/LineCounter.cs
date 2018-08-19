@@ -15,8 +15,8 @@ namespace DrwgTronics.Uatu.Components
 
         public LineCountProgress Count(FileEvent fileEvent)
         {
-            const double TimeoutSeconds = 20.0;
-            const int RetryInterval = 1000; // 1 seconds
+            const double TimeoutSeconds = 5.0;
+            const int RetryInterval = 900; // milliseconds
             var report = new LineCountProgress(fileEvent);
 
             DateTime startTime = DateTime.Now;
